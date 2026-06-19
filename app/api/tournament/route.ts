@@ -1,13 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { put, list } from '@vercel/blob';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 const FILE_NAME = 'tournament-inscriptions.json';
 
 async function getCurrentData() {
   try {
     const { blobs } = await list({ prefix: FILE_NAME });
     if (blobs.length === 0) return [];
-    const res = await fetch(blobs[0].url, { cache: 'no-store' }); // <-- ajouté
+    const res = await fetch(blobs[0].url, { cache: 'no-store' });
     return await res.json();
   } catch {
     return [];
@@ -17,7 +20,7 @@ async function getCurrentData() {
 export async function GET() {
   const data = await getCurrentData();
   return NextResponse.json(data, {
-    headers: { 'Cache-Control': 'no-store, max-age=0' }, // <-- ajouté aussi
+    headers: { 'Cache-Control': 'no-store, max-age=0' },
   });
 }
 
