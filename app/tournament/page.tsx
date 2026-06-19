@@ -18,7 +18,7 @@ export default function AdminTournamentPage() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/tournament');
+      const res = await fetch('/api/tournament', { cache: 'no-store' });
       if (!res.ok) throw new Error('Erreur de chargement');
       const json = await res.json();
       setData(json.reverse()); // plus récent en premier

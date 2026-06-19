@@ -7,7 +7,7 @@ async function getCurrentData() {
   try {
     const { blobs } = await list({ prefix: FILE_NAME });
     if (blobs.length === 0) return [];
-    const res = await fetch(blobs[0].url);
+    const res = await fetch(blobs[0].url, { cache: 'no-store' }); // <-- ajouté
     return await res.json();
   } catch {
     return [];
@@ -16,7 +16,9 @@ async function getCurrentData() {
 
 export async function GET() {
   const data = await getCurrentData();
-  return NextResponse.json(data);
+  return NextResponse.json(data, {
+    headers: { 'Cache-Control': 'no-store, max-age=0' }, // <-- ajouté aussi
+  });
 }
 
 export async function POST(req: NextRequest) {
